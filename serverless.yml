@@ -1,0 +1,88 @@
+service: serverless-skeleton-crud
+
+provider:
+  name: aws
+  runtime: nodejs4.3
+  region: eu-west-1
+  stage: dev
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:DescribeTable
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource: "arn:aws:dynamodb:eu-west-1:*:*"
+
+custom:
+    myStage: ${opt:stage, self:provider.stage}
+
+functions:
+  create:
+    handler: handler.create
+    events:
+      - http:
+          path: skeleton
+          method: post
+          cors: true
+          
+  readAll:
+    handler: handler.readAll
+    events:
+      - http:
+          path: skeleton
+          method: get
+          cors: true
+
+  readOne:
+    handler: handler.readOne
+    events:
+      - http:
+          path: skeleton/{id}
+          method: get
+          cors: true
+
+  readMultiple:
+    handler: handler.readMultiple
+    events:
+      - http:
+          path: skeleton
+          method: get
+          cors: true
+
+  update:
+    handler: handler.update
+    events:
+      - http:
+          path: skeleton/{id}
+          method: put
+          cors: true
+  delete:
+    handler: handler.delete
+    events:
+      - http:
+          path: skeleton/{id}
+          method: delete
+          cors: true
+
+resources:
+  Resources:
+    skeletonDynamoDbTable:
+      Type: 'AWS::DynamoDB::Table'
+      DeletionPolicy: Retain
+      Properties:
+        AttributeDefinitions:
+          -
+            AttributeName: id
+            AttributeType: S
+        KeySchema:
+          -
+            AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: 'skeleton'
