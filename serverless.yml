@@ -5,20 +5,38 @@ provider:
   runtime: nodejs4.3
   region: eu-west-1
   stage: dev
+  apiKeys:
+    - secret
+
   iamRoleStatements:
     - Effect: Allow
       Action:
-        - dynamodb:DescribeTable
-        - dynamodb:Query
-        - dynamodb:Scan
-        - dynamodb:GetItem
-        - dynamodb:PutItem
-        - dynamodb:UpdateItem
-        - dynamodb:DeleteItem
+        - "dynamodb:DescribeTable"
+        - "dynamodb:Query"
+        - "dynamodb:Scan"
+        - "dynamodb:GetItem"
+        - "dynamodb:PutItem"
+        - "dynamodb:UpdateItem"
+        - "dynamodb:DeleteItem"
       Resource: "arn:aws:dynamodb:eu-west-1:*:*"
+    
 
 custom:
     myStage: ${opt:stage, self:provider.stage}
+
+exclude:
+      - coverage
+      - docs
+      - handler.spec.js
+      - class.spec.js
+      - jsdoc_confi.json
+      - .git
+      - .gitignore
+      - .travis.yml
+      - package.json
+      - event.json
+      - LICENSE
+      - README.md
 
 functions:
   create:
@@ -28,7 +46,8 @@ functions:
           path: skeleton
           method: post
           cors: true
-          
+          private: true
+
   readAll:
     handler: handler.readAll
     events:
@@ -36,6 +55,7 @@ functions:
           path: skeleton
           method: get
           cors: true
+          private: true
 
   readOne:
     handler: handler.readOne
@@ -44,14 +64,7 @@ functions:
           path: skeleton/{id}
           method: get
           cors: true
-
-  readMultiple:
-    handler: handler.readMultiple
-    events:
-      - http:
-          path: skeleton
-          method: get
-          cors: true
+          private: true
 
   update:
     handler: handler.update
@@ -60,6 +73,7 @@ functions:
           path: skeleton/{id}
           method: put
           cors: true
+          private: true
   delete:
     handler: handler.delete
     events:
@@ -67,6 +81,7 @@ functions:
           path: skeleton/{id}
           method: delete
           cors: true
+          private: true
 
 resources:
   Resources:
@@ -76,11 +91,11 @@ resources:
       Properties:
         AttributeDefinitions:
           -
-            AttributeName: id
+            AttributeName: uuid
             AttributeType: S
         KeySchema:
           -
-            AttributeName: id
+            AttributeName: uuid
             KeyType: HASH
         ProvisionedThroughput:
           ReadCapacityUnits: 1

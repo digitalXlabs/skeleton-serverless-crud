@@ -23,8 +23,8 @@ class Skeleton {
         this.event = event;
         this.context = context;
         this.callback = callback;
-        this.responseError = null; // init these
-        this.responseSuccess = null;
+        // this.responseError = null; // init these
+        // this.responseSuccess = null;
     }
 
     /**
@@ -36,7 +36,6 @@ class Skeleton {
         let AWS = require('aws-sdk')
         AWS.config.update({
             region: "eu-west-1",
-            endpoint: "http://localhost:8044"
         });
 
         return new AWS.DynamoDB.DocumentClient();
@@ -53,22 +52,24 @@ class Skeleton {
         let fs = require('fs');
 
         // get teh data from the event body
-        let data = this.event.body
+        let data = JSON.parse(this.event.body);
+
+        let mydata = {
+            "name": data.name,
+            "description": data.description,
+            "url": data.url,
+            "uuid": require('uuid').v4(), // add a unitque identifier
+            "updated": new Date().toISOString() // add the updated time to now
+        }
 
         // read in the schema
         let file = fs.readFileSync(process.cwd() + "/schema.json");
         let schema = JSON.parse(file);
 
-        // add a unitque identifier
-        data.uuid = require('uuid').v4();
-
-        // add the updated time to now
-        data.updated = new Date().toISOString();
-
         // now lets validate it
-        this.validate(data, schema)
+        this.validate(mydata, schema)
             .then(function() {
-                return quintus.dbWrite(data)
+                return quintus.dbWrite(mydata)
             })
             .then(function(res) {
                 return quintus.successCallback(res)
@@ -120,16 +121,6 @@ class Skeleton {
 
 
     /**
-     * readMultiple - description
-     *
-     * @return {type}  description
-     */
-    readMultiple() {
-
-    }
-
-
-    /**
      * update - description
      *
      * @return {type}  description
@@ -140,7 +131,7 @@ class Skeleton {
         let fs = require('fs');
 
         // get teh data from the event body
-        let data = this.event.body
+        let data = JSON.parse(this.event.body);
 
         // read in the schema
         let file = fs.readFileSync(process.cwd() + "/schema.json");
@@ -384,7 +375,7 @@ class Skeleton {
             },
             body: JSON.stringify(err),
         }
-
+        console.log(err);
         this.context.fail(this.responseError);
 
     }

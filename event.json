@@ -1,5 +1,10 @@
 {
-  "key1": "value1",
-  "key2": "value2",
-  "key3": "value3"
+  "body" : {
+    "uuid": "4EC4A9B4-E9AA-4741-A07B-D5035BFB7F30",
+    "name": "slim shady",
+    "updated": "1999-01-01T12:00:00Z",
+    "description": "this is my description",
+    "url": "http://thisisaurl.com"
+  }
+
 }
