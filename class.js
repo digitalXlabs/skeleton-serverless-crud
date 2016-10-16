@@ -23,6 +23,7 @@ class Skeleton {
         this.event = event;
         this.context = context;
         this.callback = callback;
+
         // this.responseError = null; // init these
         // this.responseSuccess = null;
     }
@@ -36,6 +37,7 @@ class Skeleton {
         let AWS = require('aws-sdk')
         AWS.config.update({
             region: "eu-west-1",
+            // endpoint: "http://localhost:8044"
         });
 
         return new AWS.DynamoDB.DocumentClient();
@@ -109,8 +111,9 @@ class Skeleton {
      */
     readAll() {
         let quintus = this;
+        quintus.results = [];
 
-        this.dbReadAll(data)
+        this.dbReadAll()
             .then(function(res) {
                 return quintus.successCallback(res)
             })
@@ -139,7 +142,6 @@ class Skeleton {
 
         // add a unitque identifier
         data.uuid = this.event.pathParameters.id;
-
 
         // add the updated time to now
         data.updated = new Date().toISOString();
@@ -268,47 +270,23 @@ class Skeleton {
         let params = {
             TableName: 'skeleton'
         };
-        console.log("Reading record with id " + id + "from the table..." + params.TableName);
+
+        let results = [];
+        console.log("Retrieving all records from the table..." + params.TableName);
         return new Promise(function(resolve, reject) {
-            lucilla.getClient().scan(params, lucilla.onScan)
+            lucilla.getClient().scan(params).promise()
+                .then(function(data) {
+                    console.log("Scan succeeded.");
+                    data.Items.forEach(function(res) {
+                        results.push(res);
+                    });
+                    resolve(results);
+                })
+                .catch(function(err) {
+                    reject(err);
+                })
         })
     }
-
-
-    /**
-     * onScan - scan callback for dynamodb
-     *
-     * @param  {Error} err  error object
-     * @param  {object} data params
-     * @return {array}      array of results
-     */
-    onScan(err, data) {
-        let lucilla = this;
-        //let that = tthis
-        console.log(err);
-        // console.log(this);
-        if (err) {
-            lucilla.errorCallback(err);
-        } else {
-            console.log("Scan succeeded.");
-            let maximus = lucilla
-            data.Items.forEach(function(res) {
-                maximus.results.push(res);
-            });
-
-            // continue scanning if we have more movies
-            if (typeof data.LastEvaluatedKey != "undefined") {
-                console.log("Scanning for more...");
-                lucilla.params.ExclusiveStartKey = data.LastEvaluatedKey;
-                lucilla.getClient().scan(lucilla.params, lucilla.onScan);
-            };
-
-            // return the results array
-            return maximums.results;
-
-        }
-    }
-
 
     /**
      * dbUpdate - updates record in db

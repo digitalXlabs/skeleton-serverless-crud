@@ -14,17 +14,19 @@ let event = {
 };
 //
 let context = {
-        fail: function(msg) {
-            expect(msg).toBeDefined();
-        },
-        succeed: function(data) {
-            expect(data).toBeDefined();
-            expect(data.result).toBeDefined();
-            expect(data.result.length).toEqual(3);
-            expect(data.result[0]).toEqual('Saab');
-        }
+    fail: function(msg) {
+        expect(msg).toBeDefined();
+        expect(data.statusCode).toBeDefined();
+        expect(data.statusCode).toMatch(400);
+    },
+    succeed: function(data) {
+        expect(data).toBeDefined();
+        expect(data.statusCode).toBeDefined();
+        expect(data.statusCode).toMatch(200);
+        expect(data.body).toBeDefined()
     }
-    //ˇ
+}
+
 let callback = {
     anyting: function(err, res) {}
 }
@@ -130,14 +132,7 @@ describe("Class", function() {
 
         it('can create', function(done) {
             o.create();
-            // expect(o.event.body.uuid).toBeDefined();
-            // expect(o.responseSuccess).toBeDefined();
-            // expect(o.responseSuccess.statusCode).toMatch(200);
-            // expect(o.responseSuccess.statusCode).toBeDefined();
-
             done();
-            // console.log(o);
-
         })
     })
 
