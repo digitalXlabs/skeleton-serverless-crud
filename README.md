@@ -1,6 +1,6 @@
 #  digitalxlabs-serverless-skeleton-crud [![Build Status](https://travis-ci.org/digitalXlabs/skeleton-serverless-crud.png?branch=master)](https://travis-ci.org/digitalXlabs/skeleton-serverless-crud)
 
-Serverless Skeleton CRUD service
+Serverless Skeleton CRUD example
 
 
 
@@ -14,7 +14,6 @@ npm test
 ## Dependencies
 
 - [json-schema-remote](https://github.com/entrecode/json-schema-remote): Node.js module to validate JSON objects against a JSON Schema, including remote references ($ref)
-- [jsonschema](https://github.com/tdegrunt/jsonschema): A fast and easy to use JSON Schema validator
 - [uuid](https://github.com/defunctzombie/node-uuid): Rigorous implementation of RFC4122 (v1 and v4) UUIDs.
 
 ## Dev Dependencies
