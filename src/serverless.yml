@@ -19,24 +19,16 @@ provider:
         - "dynamodb:UpdateItem"
         - "dynamodb:DeleteItem"
       Resource: "arn:aws:dynamodb:eu-west-1:*:*"
-    
+
 
 custom:
     myStage: ${opt:stage, self:provider.stage}
 
 exclude:
-      - coverage
-      - docs
       - handler.spec.js
       - class.spec.js
-      - jsdoc_confi.json
-      - .git
-      - .gitignore
-      - .travis.yml
-      - package.json
       - event.json
-      - LICENSE
-      - README.md
+      - jsdoc.json
 
 functions:
   create:
