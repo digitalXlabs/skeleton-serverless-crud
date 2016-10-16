@@ -23,9 +23,6 @@ class Skeleton {
         this.event = event;
         this.context = context;
         this.callback = callback;
-
-        // this.responseError = null; // init these
-        // this.responseSuccess = null;
     }
 
     /**
