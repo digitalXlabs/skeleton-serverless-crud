@@ -138,7 +138,7 @@ class Skeleton {
         let schema = JSON.parse(file);
 
         // add a unitque identifier
-        data.uuid = event.pathParameters.id;
+        data.uuid = this.event.pathParameters.id;
 
 
         // add the updated time to now
@@ -147,7 +147,7 @@ class Skeleton {
         // now lets validate it
         this.validate(data, schema)
             .then(function() {
-                return quintus.dbupdate(data)
+                return quintus.dbUpdate(data)
             })
             .then(function(res) {
                 return quintus.successCallback(res)
